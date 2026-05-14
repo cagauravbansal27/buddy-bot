@@ -462,17 +462,6 @@ body::before{
   </div>
 
   <div class="card">
-    <div class="card-label">🔑 Gemini API Key (Free)</div>
-    <input type="password" id="api-key" placeholder="AIzaSy… paste here">
-    <div class="hint">
-      <strong>Get your FREE key in 60 seconds:</strong><br>
-      1. Go to <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a><br>
-      2. Click <strong>Create API Key</strong> → Copy it → Paste above.<br>
-      Gemini Flash is completely free for personal use. ✅
-    </div>
-  </div>
-
-  <div class="card">
     <div class="card-label">🔒 Parent PIN (4 digits, optional)</div>
     <input type="number" id="parent-pin" placeholder="e.g. 1234" max="9999">
   </div>
@@ -760,7 +749,7 @@ const CHIPS = {
 /* ═══════════════════════════════════════════════
    STATE
 ═══════════════════════════════════════════════ */
-let API_KEY='', CHILD='', MOOD='happy', PIN='1234';
+let API_KEY='AIzaSyBTtsjP2VX3e-QHr6_-V6MmX7ltR8Wd_MI', CHILD='', MOOD='happy', PIN='1234';
 let history=[], stars=0, msgs=0, phCount=0;
 let sessionStart=new Date();
 let topics=new Set();
@@ -838,9 +827,7 @@ RULES:
    SETUP
 ═══════════════════════════════════════════════ */
 window.onload=()=>{
-  const k=localStorage.getItem('buddy_key_v3');
   const n=localStorage.getItem('buddy_name_v3');
-  if(k) document.getElementById('api-key').value=k;
   if(n) document.getElementById('child-name').value=n;
   if('speechSynthesis' in window){
     speechSynthesis.getVoices();
@@ -857,16 +844,11 @@ function pickMood(el){
 }
 
 function startApp(){
-  const key=document.getElementById('api-key').value.trim();
   const name=document.getElementById('child-name').value.trim();
   const pin=document.getElementById('parent-pin').value.trim();
-  if(!key||!key.startsWith('AIza')){
-    alert('⚠️ Please paste a valid Gemini API key!\nGet it FREE at: aistudio.google.com/app/apikey');return;
-  }
   if(!name){alert('👦 Please enter your child\'s name first!');return;}
-  API_KEY=key; CHILD=name;
+  CHILD=name;
   if(pin&&pin.length===4) PIN=pin;
-  localStorage.setItem('buddy_key_v3',key);
   localStorage.setItem('buddy_name_v3',name);
   sessionStart=new Date();
   showScreen('s-chat');
@@ -1035,7 +1017,7 @@ async function callGemini(userText){
 async function sendMsg(){
   const inp=document.getElementById('msg-in');
   const text=inp.value.trim();
-  if(!text||!API_KEY)return;
+  if(!text)return;
   inp.value='';
   await processMsg(text);
 }
